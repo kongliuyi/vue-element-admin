@@ -50,11 +50,7 @@
       <div style="position:relative">
         <div class="tips">
           <span>Username : admin</span>
-          <span>Password : any</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right:18px;">Username : editor</span>
-          <span>Password : any</span>
+          <span>Password : password</span>
         </div>
 
         <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
@@ -98,7 +94,7 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: 'password'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -138,9 +134,17 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    checkCapslock(e) {
-      const { key } = e
-      this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
+    checkCapslock({ shiftKey, key } = {}) {
+      if (key && key.length === 1) {
+        if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
+          this.capsTooltip = true
+        } else {
+          this.capsTooltip = false
+        }
+      }
+      if (key === 'CapsLock' && this.capsTooltip === true) {
+        this.capsTooltip = false
+      }
     },
     showPwd() {
       if (this.passwordType === 'password') {
@@ -158,7 +162,9 @@ export default {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
+              console.log('this.redirect', this.redirect)
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                console.log('this.otherQuery', this.otherQuery)
               this.loading = false
             })
             .catch(() => {
