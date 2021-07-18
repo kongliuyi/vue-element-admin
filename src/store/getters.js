@@ -9,7 +9,12 @@ const getters = {
   name: state => state.user.name,
   introduction: state => state.user.introduction,
   roles: state => state.user.roles,
+  btns: state => state.permission.btns,
   permission_routes: state => state.permission.routes,
-  errorLogs: state => state.errorLog.logs
+  errorLogs: state => state.errorLog.logs,
+  nacosServer: state => state.api.nacosServer,
+  sentinelDashboard: state => state.api.sentinelDashboard,
+  mossServer: state => state.api.mossServer,
+  swaggerApi: state => state.api.swaggerApi
 }
 export default getters

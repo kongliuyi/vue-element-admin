@@ -31,5 +31,18 @@ module.exports = {
    * The default is only used in the production env
    * If you want to also use it in dev, you can pass ['production', 'development']
    */
-  errorLog: 'production'
+  errorLog: 'production',
+
+  /**
+   * 是否显示设置的底部信息
+   */
+  showFooter: true,
+  /**
+   * 底部文字，支持html语法
+   */
+  footerTxt: '© 2020 Kong Liu Yi <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License 2.0</a>',
+  /**
+   * 备案号
+   */
+  caseNumber: '浙ICP备xxxxxxx号'
 }

@@ -1,5 +1,5 @@
 <template>
-  <elFrame :src="sentinelDashboard"/>
+  <elFrame :src="sentinelDashboard" />
 </template>
 <script>
 import { mapGetters } from 'vuex'

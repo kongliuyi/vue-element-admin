@@ -1,5 +1,5 @@
 <template>
-  <elFrame :src="mossServer"/>
+  <elFrame :src="mossServer" />
 </template>
 <script>
 import { mapGetters } from 'vuex'

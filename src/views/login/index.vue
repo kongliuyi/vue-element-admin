@@ -1,9 +1,9 @@
 <template>
-  <div class="login-container">
+  <div class="login-container" :style="'background-image:url(http://image.run4wd.com/core/material/1608468685793.png);'">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">后台管理系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -45,17 +45,17 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <div style="position:relative">
         <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : password</span>
+          <!-- <span>Username : admin</span>
+          <span>Password : password</span> -->
         </div>
 
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
+        <!-- <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
           Or connect with
-        </el-button>
+        </el-button> -->
       </div>
     </el-form>
 
@@ -66,6 +66,12 @@
       <br>
       <social-sign />
     </el-dialog>
+    <!--  底部  -->
+    <div v-if="$store.state.settings.showFooter" id="el-login-footer">
+      <span v-html="$store.state.settings.footerTxt" />
+      <span> ⋅ </span>
+      <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">{{ $store.state.settings.caseNumber }}</a>
+    </div>
   </div>
 </template>
 
@@ -79,22 +85,22 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入正确的用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码不能少于6位数字'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: 'password'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -162,9 +168,7 @@ export default {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
-              console.log('this.redirect', this.redirect)
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-                console.log('this.otherQuery', this.otherQuery)
               this.loading = false
             })
             .catch(() => {
@@ -211,8 +215,8 @@ export default {
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $bg:#283443;
-$light_gray:#fff;
-$cursor: #fff;
+$light_gray:#101011;
+$cursor: #101010;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
@@ -237,16 +241,16 @@ $cursor: #fff;
       height: 47px;
       caret-color: $cursor;
 
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
+      // &:-webkit-autofill {
+      //   box-shadow: 0 0 0px 1000px $bg inset !important;
+      //   -webkit-text-fill-color: $cursor !important;
+      // }
     }
   }
 
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    background: rgb(248, 252, 255);
     border-radius: 5px;
     color: #454545;
   }
@@ -254,7 +258,7 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
+$bg:#eee;
 $dark_gray:#889aa4;
 $light_gray:#eee;
 
@@ -320,6 +324,19 @@ $light_gray:#eee;
     right: 0;
     bottom: 6px;
   }
+
+  #el-login-footer {
+  height: 40px;
+  line-height: 40px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  font-family: Arial, serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
 
   @media only screen and (max-width: 470px) {
     .thirdparty-button {
