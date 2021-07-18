@@ -18,6 +18,23 @@ export function login(data) {
   })
 }
 
+export function refreshToken(data) {
+  const form = {
+    refresh_token: data,
+    grant_type: 'refresh_token',
+    scope: 'read'
+  }
+  return request({
+    url: '/authorization-server/oauth/token',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic dGVzdF9jbGllbnQ6dGVzdF9zZWNyZXQ='
+    },
+    method: 'post',
+    params: form
+  })
+}
+
 export function getInfo(token) {
   return request({
     url: '/api-admin/user/current',

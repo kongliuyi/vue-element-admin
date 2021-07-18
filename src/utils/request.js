@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
-import { getToken } from '@/utils/auth'
+import { getToken, getExpireTimeToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
@@ -9,10 +9,20 @@ const service = axios.create({
   timeout: 15000 // 请求超时时间
 })
 
+// 用于记录是否正在刷新 token，以免同时刷新
+window.isRefreshing = false
+
 // request拦截器
 service.interceptors.request.use(config => {
   if (store.getters.token) {
-    config.headers['Authorization'] = 'Bearer ' + getToken()// 让每个请求携带自定义token 请根据实际情况自行修改
+    const expireTime = getExpireTimeToken()
+    if (!window.isRefreshing && !expireTime) {
+      window.isRefreshing = true
+      return store.dispatch('user/refreshToken', config)
+    }
+    if (!window.isRefreshing) {
+      config.headers['Authorization'] = 'Bearer ' + getToken()// 让每个请求携带自定义token 请根据实际情况自行修改
+    }
   }
   return config
 }, error => {
@@ -24,6 +34,8 @@ service.interceptors.request.use(config => {
 // respone拦截器
 service.interceptors.response.use(
   response => {
+    console.log(response)
+    debugger
     const res = response.data
     // if the custom code is not 00000, it is judged as an error.
     if (res.code && res.code !== '00000') {

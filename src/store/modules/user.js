@@ -1,9 +1,11 @@
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { login, setToken, refreshToken, logout, getInfo } from '@/api/user'
+import { getToken, setAuthentication, removeToken, getRefreshToken, getExpireTimeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
+  refreshToken: getRefreshToken(),
+  expireTimeToken: getExpireTimeToken(),
   name: '',
   avatar: '',
   introduction: '',
@@ -36,8 +38,23 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         commit('SET_TOKEN', response.access_token)
-        setToken(response.access_token)
+        setAuthentication(response)
         resolve()
+      }).catch(error => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+  // user refreshToken
+  refreshToken({ commit }, config) {
+    return new Promise((resolve, reject) => {
+      refreshToken(getRefreshToken()).then(response => {
+        commit('SET_TOKEN', response.access_token)
+        setAuthentication(response)
+        window.isRefreshing = false
+        config.headers['Authorization'] = 'Bearer ' + getToken()// 让每个请求携带自定义token 请根据实际情况自行修改
+        resolve(config)
       }).catch(error => {
         console.log(error)
         reject(error)
