@@ -11,7 +11,9 @@ export function setAuthentication(authentication) {
   var expireTime = new Date()
   // 提前 5 秒到期
   expireTime.setTime(expireTime.getTime() + (authentication.expires_in - 5) * 1000)
-  return Cookies.set(TokenKey, authentication.access_token) && Cookies.set(RefreshTokenKey, authentication.refresh_token) && Cookies.set(ExpireTimeTokenKey, authentication.expires_in, expireTime)
+  return Cookies.set(TokenKey, authentication.access_token) && Cookies.set(RefreshTokenKey, authentication.refresh_token) && Cookies.set(ExpireTimeTokenKey, authentication.expires_in, {
+    expires: expireTime
+  })
 }
 
 export function getToken() {
